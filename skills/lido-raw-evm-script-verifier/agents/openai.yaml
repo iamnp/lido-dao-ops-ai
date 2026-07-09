@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lido Raw EVM Script Verifier"
+  short_description: "Verify raw EVM script against parsed calldata"
+  default_prompt: "Use $lido-raw-evm-script-verifier to compare this raw EVM script against the parsed Lido voting calldata."

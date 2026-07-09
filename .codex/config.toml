@@ -1,0 +1,9 @@
+# Project-scoped Codex settings. Loaded only when this repo is trusted.
+
+# Use live web results for Codex web search in this project.
+web_search = "live"
+
+# Allow commands run in the workspace-write sandbox to make outbound network
+# requests without requiring a sandbox escalation just for network access.
+[sandbox_workspace_write]
+network_access = true

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lido Voting Output Verifier"
+  short_description: "Verify and fix Lido voting action lists"
+  default_prompt: "Use $lido-voting-output-verifier to verify voting_items.md against the source Lido voting calldata and fix any issues."

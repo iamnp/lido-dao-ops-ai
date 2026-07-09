@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lido Voting Action List"
+  short_description: "Convert Lido voting calldata into actions"
+  default_prompt: "Use $lido-voting-action-list to convert this Lido voting calldata into voting_items.md."
