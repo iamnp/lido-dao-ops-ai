@@ -7,7 +7,7 @@ description: Verify a raw Aragon/Lido EVM script hex blob against parsed Lido vo
 
 ## Objective
 
-Verify that a parsed representation of Lido voting calldata exactly matches the supplied raw EVM script. Treat the raw EVM script as the source of truth and the parsed calldata as untrusted until every byte range is accounted for.
+Verify that a parsed representation of Lido voting calldata exactly matches the supplied raw EVM script. Treat the raw EVM script as the source of truth and the parsed calldata as untrusted until every byte range is accounted for. Always parse the raw script by creating and running a temporary Python script before comparing it with the submitted parsed calldata; do not replace this step with manual or mental parsing.
 
 This skill is for raw-script verification only. Do not generate the final `voting_items.md` action list here; use `lido-voting-action-list` and `lido-voting-output-verifier` for action-list work.
 
@@ -18,6 +18,19 @@ Use the raw EVM script hex supplied by the user and the parsed voting calldata, 
 Accept raw script values with or without a `0x` prefix. Preserve checksum address casing from parsed input when comparing display values, but compare hex bytes case-insensitively.
 
 ## Raw CallScript Parsing
+
+For every verification, first create a temporary Python script in `/tmp` or a workspace temporary directory. The script must accept the supplied raw EVM script, parse it independently, validate its structure, and emit the complete ordered call records used for verification. Then run the script on the actual raw bytes. Do not begin the raw-versus-parsed comparison until the script has run successfully.
+
+Make the parser output deterministic and machine-readable, preferably JSON. For every call, emit at least:
+
+- call index
+- start and end byte offsets within the raw script
+- target address as the exact 20 address bytes
+- calldata length
+- full calldata/value as bytes, without ABI interpretation
+- selector as a convenience field only, not as a substitute for full-byte comparison
+
+The temporary parser must perform the structural checks below itself. Keep it only as a temporary task artifact; do not add it to the skill as the submitted parsed calldata or treat pre-existing parsed output as the parser result.
 
 For Aragon CallScript executor ID `0x00000001`, parse the bytes as:
 
@@ -37,7 +50,7 @@ Reject or flag any raw script that:
 - has trailing bytes after the last decoded call
 - has a length prefix that does not equal the actual calldata byte count
 
-Record every decoded call with:
+Have the Python parser record every decoded call with:
 
 - call index
 - start and end byte offsets within the raw script
@@ -65,13 +78,19 @@ Normalize wrappers carefully:
 
 ## Verification Workflow
 
-1. Decode the raw EVM script into ordered call records and byte offsets.
-2. Normalize the parsed calldata or execution trace into ordered call records.
-3. Compare call counts at the same nesting level.
-4. Compare each call in order by target address, calldata length, selector, and full calldata bytes.
-5. For ABI-decoded parsed calls, verify that the decoded selector and arguments are consistent with the raw calldata.
-6. Recursively verify nested EVM scripts found in parsed wrapper arguments.
-7. Produce a concise mismatch report, or repair the parsed artifact in place if the user explicitly asked for fixes and the correct value is byte-obvious from the raw script.
+Follow this sequence exactly:
+
+1. Create a temporary Python script that parses the raw EVM script according to the CallScript layout and emits complete ordered call records with byte offsets.
+2. Run that script against the supplied raw EVM script. Stop and report a structural error if it fails; do not fall back to manual parsing.
+3. Use the script's emitted records as the raw-side source for all subsequent comparisons.
+4. Normalize the submitted parsed calldata or execution trace into ordered call records without deriving it from the temporary parser's output.
+5. Compare call counts at the same nesting level.
+6. Compare every call in order, first comparing all 20 target-address bytes and then all calldata/value bytes byte by byte. Also compare the declared calldata length with the byte count. A matching selector or ABI-decoded meaning is not sufficient for a pass.
+7. For ABI-decoded parsed calls, reconstruct the complete calldata/value bytes when possible and byte-compare them with the Python parser output. Verify decoded selectors and arguments only as an additional consistency check.
+8. Recursively verify nested EVM scripts found in parsed wrapper arguments by creating and running a temporary Python parser for the nested raw script, then applying the same byte-by-byte comparison at that nesting level.
+9. Produce a concise mismatch report, or repair the parsed artifact in place if the user explicitly asked for fixes and the correct value is byte-obvious from the raw script.
+
+Do not declare success from matching contract names, checksummed address text, function names, selectors, decoded argument displays, or hashes alone. Success requires exact ordered equality of the address bytes and full calldata/value bytes for every call, plus equal call counts and valid length prefixes.
 
 ## Mismatch Reporting
 
