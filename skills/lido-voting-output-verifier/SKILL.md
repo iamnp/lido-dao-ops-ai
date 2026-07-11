@@ -19,7 +19,7 @@ Use this registry for canonical contract-name checks:
 2. Independently reconstruct the effective call list. Expand `AragonAgent.forward(bytes _evmScript)` and similar wrappers; ignore only pure wrappers; keep wrapper calls only when the wrapper itself is the meaningful action.
 3. Count effective non-wrapper calls, including empty-calldata calls.
 4. Read `voting_items.md` and map each action line to exactly one effective call.
-5. Run the strict byte-for-byte checks below for every mapped action. Treat one mismatched, omitted, truncated, rounded, or unverified byte sequence as a verification failure.
+5. Run the strict byte-for-byte checks below for every mapped action. Use a mechanical comparison for every raw hex value; visual inspection is not verification. Treat one mismatched, omitted, truncated, rounded, or unverified byte sequence as a verification failure.
 6. Fetch or read the Lido Docs registry and verify every contract name/address pair used in `voting_items.md`.
 7. Fix missing, extra, duplicated, mislabeled, misordered, misformatted, or byte-inaccurate actions directly in `voting_items.md`.
 8. Re-run the checklist below after edits until no issues remain.
@@ -31,6 +31,23 @@ Verify every address, hash, and value independently against the original calldat
 For each effective call, retain and check the exact target address bytes, call value, function selector, and ABI-encoded argument bytes. For nested EVM scripts, perform the same checks against the exact inner call bytes after locating each call boundary.
 
 For every address, compare the complete 20-byte value. For every hash, role identifier, selector, `bytesN`, and dynamic `bytes` value, compare the complete byte sequence and its exact length. Never use prefix, suffix, case-insensitive text, visually similar text, or shortened-value matching as a substitute for byte equality. Preserve the source spelling and checksum casing in the action list when available after byte equality is established.
+
+### Mandatory Mechanical Hex Comparison
+
+For every raw hex literal that is retained in an action—including addresses, hashes, role identifiers, permissions, setup calldata, nested calldata, selectors, and arbitrary `bytes`—extract the complete source literal and the complete output literal and compare them mechanically. Never approve a long hex literal by reading it on screen.
+
+Apply all of these checks to each source/output pair:
+
+1. Strip only the syntactic `0x` prefix. Do not trim, pad, regroup, decode, or otherwise normalize the value before the raw comparison.
+2. Assert that both values contain only hex digits and have an even number of hex digits. An odd-length value cannot represent a complete byte sequence and is an immediate failure.
+3. Compare the exact hex-digit counts before comparing content. Report any length delta explicitly; a length mismatch fails even when decoding appears to produce the intended values.
+4. Compare the complete values byte for byte with a deterministic tool or script. Hex letter case may be normalized only for this equality test; restore and verify the source spelling or checksum casing in the final action.
+5. When values differ, locate the first differing byte offset and inspect fixed-width, start-aligned chunks around it. Do not use independently wrapped visual text because a missing nibble or byte shifts all later apparent groups.
+6. After a repair, re-extract the literal from `voting_items.md` and repeat the same length and full-content assertions. Do not treat editing the line as proof that the repair succeeded.
+
+For a raw `bytes` value that itself contains standard ABI function calldata, perform an additional structural sanity check: it must contain an 8-hex-digit selector, and the ABI payload after that selector must have a length consistent with the function ABI. For ordinary ABI encoding, each static word occupies exactly 64 hex digits and offsets, lengths, padding, arrays, and tuples must resolve within the literal. This structural check supplements the direct source/output comparison; it never replaces it.
+
+If only a parsed trace is available, its displayed raw hex literal is the comparison source. Compare that literal directly with the action-list literal even when the parsed arguments or a fresh ABI decode look equivalent. In particular, decoded numeric equality does not excuse missing leading zero bytes, truncation, concatenation shifts, or a different raw encoding.
 
 For every calldata-derived value—including integers, booleans, strings, token amounts, durations, IDs, arrays, tuples, enum values, and call ETH values—decode it with the exact ABI type and verify it against its complete source byte range. If the action renders a decoded or human-readable form, ABI-encode or otherwise losslessly reverse that rendered value and require the result to equal the original bytes exactly. Unit conversion is allowed only when it is exact and reversible; never round, approximate, silently rescale, normalize, or drop precision.
 
