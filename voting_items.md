@@ -1,13 +1,13 @@
 1. Submit Dual Governance proposal with metadata `aa` and `1` call to Dual Governance `0xc1db28b3301331277e307fdcff8de28242a4486e`
 
 I. Start SRv3 upgrade and upgrade core proxies
-1.1. [UNKNOWN] Execute `startUpgrade()` on Upgrade Template `0xd92b6303ba39297cb69a3a17a88b47586a6af14c`
-1.2. Upgrade Lido Locator `0xc1d0b3de6792bf6b4b37eccdcc24e45978cfd2eb` to implementation Lido Locator `0x0360002bf51DCae1c0267aE0AFDaBacAF7De686b`
-1.3. Upgrade Staking Router `0xfddf38947afb03c621c71b06c9c70bce73f12999` to implementation Staking Router `0xDD76927045435C7605cf6f5F978cfb8CABDb5F80` with setup calldata `0x8ee1c0a8000000000000000000000000000000000000000000000000000002e90edd0000` and force call `false`
-1.4. Upgrade AccountingOracle `0x852ded011285fe67063a08005c71a85690503cee` to implementation AccountingOracle `0xe4f03D1107d1905B6F2A28FCb6Af221E0CE19136` with setup calldata `0x9d005ce70000000000000000000000000000000000000000000000000000000000000006` and force call `false`
-1.5. Upgrade ValidatorsExitBusOracle `0x0de4ea0184c2ad0baca7183356aea5b8d5bf5c6e` to implementation ValidatorsExitBusOracle `0x2C3386b39db89eef0F362A3BE0C05a6811E809E3` with setup calldata `0x560cf78100000000000000000000000000000000000000000000000000000000000002580000000000000000000000000000000000000000000000000000000000057800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000000000005` and force call `false`
-1.6. Upgrade Accounting `0x23ed611be0e1a820978875c0122f92260804cddf` to implementation Accounting `0x3aa937Ac2ab89CDd363EdC6b5A4d4A42dF5bc043`
-1.7. Upgrade Withdrawal Vault `0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f` to implementation Withdrawal Vault `0xfB4521BD151BFB45DB6045D2d07e58e0f597e340` with setup calldata `0x6d395b7e`
+1.1. Execute `startUpgrade()` on Upgrade Template `0xd92b6303ba39297cb69a3a17a88b47586a6af14c`
+1.2. Upgrade Lido Locator `0xc1d0b3de6792bf6b4b37eccdcc24e45978cfd2eb` to implementation `0x0360002bf51DCae1c0267aE0AFDaBacAF7De686b`
+1.3. Upgrade Staking Router `0xfddf38947afb03c621c71b06c9c70bce73f12999` to implementation `0xDD76927045435C7605cf6f5F978cfb8CABDb5F80` with setup calldata `0x8ee1c0a8000000000000000000000000000000000000000000000000000002e90edd0000` and force call `false`
+1.4. Upgrade AccountingOracle `0x852ded011285fe67063a08005c71a85690503cee` to implementation `0xe4f03D1107d1905B6F2A28FCb6Af221E0CE19136` with setup calldata `0x9d005ce70000000000000000000000000000000000000000000000000000000000000006` and force call `false`
+1.5. Upgrade ValidatorsExitBusOracle `0x0de4ea0184c2ad0baca7183356aea5b8d5bf5c6e` to implementation `0x2C3386b39db89eef0F362A3BE0C05a6811E809E3` with setup calldata `0x560cf78100000000000000000000000000000000000000000000000000000000000002580000000000000000000000000000000000000000000000000000000000057800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000000000005` and force call `false`
+1.6. Upgrade Accounting `0x23ed611be0e1a820978875c0122f92260804cddf` to implementation `0x3aa937Ac2ab89CDd363EdC6b5A4d4A42dF5bc043`
+1.7. Upgrade Withdrawal Vault `0xb9d7934878b5fb9610b3fe8a5e441e8fad7e293f` to implementation `0xfB4521BD151BFB45DB6045D2d07e58e0f597e340` with setup calldata `0x6d395b7e`
 
 II. Update Lido app implementation
 1.8. Grant APP MANAGER ROLE `0xb6d92708f3d4817afc106147d969e229ced5c46e65e0a5002a0d391287762bd0` to Aragon Agent `0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c` for Lido DAO `0xb8FFC3Cd6e7Cf5a098A1c92F48009765B24088Dc` on Aragon ACL `0x9895f0f17cc1d1891b6f18ee0b483b6f221b37bb`
@@ -28,19 +28,19 @@ IV. Register core protocol pausers
 1.19. Register Top Up Gateway `0x3FC2C71579D80790Aaa3fc7Be8B66ac39dC57374` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser CircuitBreaker Committee `0x8772E3a2D86B9347A2688f9bc1808A6d8917760C`
 
 V. Upgrade Community Staking Module contracts
-1.20. Upgrade CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f` to implementation CSModule `0x63992a86f009fcC796a8369feEfB68880aef4e3a` with setup calldata `0x3b5312dc`
-1.21. Upgrade ParametersRegistry `0x9d28ad303c90df524ba960d7a2dac56dcc31e428` to implementation ParametersRegistry `0x107d287F178cD54792614d7D63C47D8242240BeD` with setup calldata `0x3b5312dc`
-1.22. Upgrade FeeOracle `0x4d4074628678bd302921c20573eea1ed38ddf7fb` to implementation FeeOracle `0xecE6e0Cde61078F76b66Ef0C338a6875E5D01F79` with setup calldata `0x5334b5ef0000000000000000000000000000000000000000000000000000000000000004`
-1.23. Upgrade VettedGate (Identified Community Stakers Gate) `0xb314d4a76c457c93150d308787939063f4cc67e0` to VettedGate implementation `0x66ADb8b3F58d3DFdF6bAdB595E41f19e947E5c14`
-1.24. Upgrade CSM Accounting `0x4d72bff1beac69925f8bd12526a39baab069e5da` to implementation CSM Accounting `0xe768572cc5aE5C698345C59288d871a949Ea8bd3` with setup calldata `0x3b5312dc`
-1.25. Upgrade FeeDistributor `0xd99cc66fec647e68294c6477b40fc7e0f6f618d0` to implementation FeeDistributor `0x936da7cDB7eed1084d294E23eA1d7Ad72DCcfE0E` with setup calldata `0x3b5312dc`
-1.26. Upgrade ExitPenalties `0x06cd61045f958a209a0f8d746e103ecc625f4193` to implementation ExitPenalties `0xA5b9e96E951089E629Ab0834AEaF242a81394EA0`
-1.27. Upgrade ValidatorStrikes `0xaa328816027f2d32b9f56d190bc9fa4a5c07637f` to implementation ValidatorStrikes `0xd25E7C3923d2e68c325980b0e15eD20d62B2691F`
+1.20. Upgrade CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f` to implementation `0x63992a86f009fcC796a8369feEfB68880aef4e3a` with setup calldata `0x3b5312dc`
+1.21. Upgrade ParametersRegistry `0x9d28ad303c90df524ba960d7a2dac56dcc31e428` to implementation `0x107d287F178cD54792614d7D63C47D8242240BeD` with setup calldata `0x3b5312dc`
+1.22. Upgrade FeeOracle `0x4d4074628678bd302921c20573eea1ed38ddf7fb` to implementation `0xecE6e0Cde61078F76b66Ef0C338a6875E5D01F79` with setup calldata `0x5334b5ef0000000000000000000000000000000000000000000000000000000000000004`
+1.23. Upgrade VettedGate (Identified Community Stakers Gate) `0xb314d4a76c457c93150d308787939063f4cc67e0` to implementation `0x66ADb8b3F58d3DFdF6bAdB595E41f19e947E5c14`
+1.24. Upgrade CSM Accounting `0x4d72bff1beac69925f8bd12526a39baab069e5da` to implementation `0xe768572cc5aE5C698345C59288d871a949Ea8bd3` with setup calldata `0x3b5312dc`
+1.25. Upgrade FeeDistributor `0xd99cc66fec647e68294c6477b40fc7e0f6f618d0` to implementation `0x936da7cDB7eed1084d294E23eA1d7Ad72DCcfE0E` with setup calldata `0x3b5312dc`
+1.26. Upgrade ExitPenalties `0x06cd61045f958a209a0f8d746e103ecc625f4193` to implementation `0xA5b9e96E951089E629Ab0834AEaF242a81394EA0`
+1.27. Upgrade ValidatorStrikes `0xaa328816027f2d32b9f56d190bc9fa4a5c07637f` to implementation `0xd25E7C3923d2e68c325980b0e15eD20d62B2691F`
 1.28. Set ejector to CSM Ejector `0x610B517D380f287c239C93F8eF6FfBd567AA4bA5` on ValidatorStrikes `0xaa328816027f2d32b9f56d190bc9fa4a5c07637f`
 
 VI. Migrate Community Staking Module roles and gates
-1.29. Revoke role `0x59911a6aa08a72fe3824aec4500dc42335c6d0702b6d5c5c72ceb265a0de9302` from Community Staking Module Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f` on CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f`
-1.30. Grant role `0xa2c92d51d5647473735e9dfd5e2edf65bcf2fc2c139c95cbed53c19dc227c0b5` to Community Staking Module Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f` on CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f`
+1.29. Revoke role `0x59911a6aa08a72fe3824aec4500dc42335c6d0702b6d5c5c72ceb265a0de9302` from CSM Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f` on CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f`
+1.30. Grant role `0xa2c92d51d5647473735e9dfd5e2edf65bcf2fc2c139c95cbed53c19dc227c0b5` to CSM Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f` on CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f`
 1.31. Revoke role `0xe85fdec10fe0f93d0792364051df7c3d73e37c17b3a954bffe593960e3cd3012` from EVMScriptExecutor `0xFE5986E06210aC1eCC1aDCafc0cc7f8D63B3F977` on CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f`
 1.32. Grant role `0xe4c6f42648e5067520394b287613558d8b8a48bc7a320523da96c04d46253bda` to EVMScriptExecutor `0xFE5986E06210aC1eCC1aDCafc0cc7f8D63B3F977` on CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f`
 1.33. Revoke VERIFIER ROLE `0x0ce23c3e399818cfee81a7ab0880f714e53d7672b08df0fa62f2843416e1ea09` from CSM Verifier `0xdC5FE1782B6943f318E05230d688713a560063DC` on CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f`
@@ -50,21 +50,21 @@ VI. Migrate Community Staking Module roles and gates
 1.37. Revoke CREATE NODE OPERATOR ROLE `0xc72a21b38830f4d6418a239e17db78b945cc7cfee674bac97fd596eaf0438478` from PermissionlessGate `0xcF33a38111d0B1246A3F38a838fb41D626B454f0` on CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f`
 1.38. Grant CREATE NODE OPERATOR ROLE `0xc72a21b38830f4d6418a239e17db78b945cc7cfee674bac97fd596eaf0438478` to PermissionlessGate `0xb8cd8F059Ad7a5dB8CAfDe34aAb007317F7156C8` on CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f`
 1.39. Revoke role `0xc0bd4bb446c4ce6fd2289aa78c8ea233de3ad2b870bc787b2ba154e19c271f12` from Aragon Agent `0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c` on VettedGate (Identified Community Stakers Gate) `0xb314d4a76c457c93150d308787939063f4cc67e0`
-1.40. Revoke role `0x4a1304957825c6a76938ccf907b92b9b872c8348083e23dae57e7e6111105d0c` from Community Staking Module Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f` on VettedGate (Identified Community Stakers Gate) `0xb314d4a76c457c93150d308787939063f4cc67e0`
+1.40. Revoke role `0x4a1304957825c6a76938ccf907b92b9b872c8348083e23dae57e7e6111105d0c` from CSM Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f` on VettedGate (Identified Community Stakers Gate) `0xb314d4a76c457c93150d308787939063f4cc67e0`
 1.41. Set name `Identified Community Stakers Gate` on VettedGate (Identified Community Stakers Gate) `0xb314d4a76c457c93150d308787939063f4cc67e0`
 1.42. Register CSM Verifier `0xdC5FE1782B6943f318E05230d688713a560063DC` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser [UNKNOWN] SandboxNodeOperatorsRegistry `0x0000000000000000000000000000000000000000`
 1.43. Register CSM Ejector `0xc72b58aa02E0e98cF8A4a0E9Dce75e763800802C` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser [UNKNOWN] SandboxNodeOperatorsRegistry `0x0000000000000000000000000000000000000000`
-1.44. Register CSM Verifier `0xfce7aB839e55de77730716D05b3553e45ab3A5Ba` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser Community Staking Module Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f`
-1.45. Register CSM Ejector `0x610B517D380f287c239C93F8eF6FfBd567AA4bA5` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser Community Staking Module Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f`
-1.46. Register VettedGate (Identified DVT Cluster Gate) `0xa12760721A72A7199aB38059DA6690b9Cd4ed7B8` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser Community Staking Module Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f`
+1.44. Register CSM Verifier `0xfce7aB839e55de77730716D05b3553e45ab3A5Ba` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser CSM Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f`
+1.45. Register CSM Ejector `0x610B517D380f287c239C93F8eF6FfBd567AA4bA5` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser CSM Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f`
+1.46. Register VettedGate (Identified DVT Cluster Gate) `0xa12760721A72A7199aB38059DA6690b9Cd4ed7B8` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser CSM Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f`
 1.47. Grant CREATE NODE OPERATOR ROLE `0xc72a21b38830f4d6418a239e17db78b945cc7cfee674bac97fd596eaf0438478` to VettedGate (Identified DVT Cluster Gate) `0xa12760721A72A7199aB38059DA6690b9Cd4ed7B8` on CSModule `0xda7de2ecddfccc6c3af10108db212acbbf9ea83f`
 
 VII. Configure Community Staking Module bond and withdrawal roles
 1.48. Grant SET BOND CURVE ROLE `0x645c9e6d2a86805cb5a28b1e4751c0dab493df7cf935070ce405489ba1a7bf72` to VettedGate (Identified DVT Cluster Gate) `0xa12760721A72A7199aB38059DA6690b9Cd4ed7B8` on CSM Accounting `0x4d72bff1beac69925f8bd12526a39baab069e5da`
 1.49. Grant MANAGE BOND CURVES ROLE `0xd35e4a788498271198ec69c34f1dc762a1eee8200c111f598da1b3dde946783d` to Identified DVT Cluster Curve Setup `0x711985E069f4d702e0457C0dACAde3D3894Ce4E3` on CSM Accounting `0x4d72bff1beac69925f8bd12526a39baab069e5da`
 1.50. Grant role `0x2ea86fa86b8394b93915254c102ea62e584d45bf5fd06dbc4e2efaddacd2d925` to Identified DVT Cluster Curve Setup `0x711985E069f4d702e0457C0dACAde3D3894Ce4E3` on ParametersRegistry `0x9d28ad303c90df524ba960d7a2dac56dcc31e428`
-1.51. [UNKNOWN] Execute `execute()` on Identified DVT Cluster Curve Setup `0x711985e069f4d702e0457c0dacade3d3894ce4e3`
-1.52. Grant role `0x00b6097bf7ad894f88f786cd383df3190b971af96510047737d0cb2e9bd25558` to Community Staking Module Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f` on ParametersRegistry `0x9d28ad303c90df524ba960d7a2dac56dcc31e428`
+1.51. Execute `execute()` on Identified DVT Cluster Curve Setup `0x711985e069f4d702e0457c0dacade3d3894ce4e3`
+1.52. Grant role `0x00b6097bf7ad894f88f786cd383df3190b971af96510047737d0cb2e9bd25558` to CSM Committee `0xC52fC3081123073078698F1EAc2f1Dc7Bd71880f` on ParametersRegistry `0x9d28ad303c90df524ba960d7a2dac56dcc31e428`
 1.53. Revoke REQUEST BURN SHARES ROLE `0x4be29e0e4eb91f98f709d98803cba271592782e293b84a625e025cbb40197ba8` from CSM Accounting `0x4d72BFF1BeaC69925F8Bd12526a39BAAb069e5Da` on Burner `0xe76c52750019b80b43e36df30bf4060eb73f573a`
 1.54. Grant REQUEST BURN MY STETH ROLE `0x28186f938b759084eea36948ef1cd8b40ec8790a98d5f1a09b70879fe054e5cc` to CSM Accounting `0x4d72BFF1BeaC69925F8Bd12526a39BAAb069e5Da` on Burner `0xe76c52750019b80b43e36df30bf4060eb73f573a`
 1.55. Revoke ADD FULL WITHDRAWAL REQUEST ROLE `0x15fac8ba7fe8dd5344b88c1915452ce66976f270d1cd793c3b0ab579cecd33c0` from CSM Ejector `0xc72b58aa02E0e98cF8A4a0E9Dce75e763800802C` on Triggerable Withdrawals Gateway `0xdc00116a0d3e064427da2600449cfd2566b3037b`
@@ -75,15 +75,15 @@ VIII. Add and activate Curated Module v2
 1.58. Grant REQUEST BURN MY STETH ROLE `0x28186f938b759084eea36948ef1cd8b40ec8790a98d5f1a09b70879fe054e5cc` to Curated Accounting `0x2F91e3A8C5d6593bf4F8403fCfeCcd62dF59f6F6` on Burner `0xe76c52750019b80b43e36df30bf4060eb73f573a`
 1.59. Grant ADD FULL WITHDRAWAL REQUEST ROLE `0x15fac8ba7fe8dd5344b88c1915452ce66976f270d1cd793c3b0ab579cecd33c0` to Curated Ejector `0xe181A377A2d2BDE9A83f1474BC3DB7A412de091E` on Triggerable Withdrawals Gateway `0xdc00116a0d3e064427da2600449cfd2566b3037b`
 1.60. Grant RESUME ROLE `0x2fc10cc8ae19568712f7a176fb4978616a610650813c9d05326c34abb62749c7` to Aragon Agent `0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c` on CuratedModule `0xda5f930ce326eb5205085d66c72a4e79d60cb8c1`
-1.61. [UNKNOWN] Execute `resume()` on CuratedModule `0xda5f930ce326eb5205085d66c72a4e79d60cb8c1`
+1.61. Execute `resume()` on CuratedModule `0xda5f930ce326eb5205085d66c72a4e79d60cb8c1`
 1.62. Revoke RESUME ROLE `0x2fc10cc8ae19568712f7a176fb4978616a610650813c9d05326c34abb62749c7` from Aragon Agent `0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c` on CuratedModule `0xda5f930ce326eb5205085d66c72a4e79d60cb8c1`
 1.63. Update initial epoch to `467564` on HashConsensus `0x902d64c93f6595339aa46105627a085591051afb`
-1.64. Register CuratedModule `0xDa5F930cE326EB5205085D66c72A4E79d60cB8C1` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser Curated Module Committee `0x2570e0b22AD904501dfB0d49575991ACB801dD91`
-1.65. Register Curated Accounting `0x2F91e3A8C5d6593bf4F8403fCfeCcd62dF59f6F6` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser Curated Module Committee `0x2570e0b22AD904501dfB0d49575991ACB801dD91`
-1.66. Register Curated FeeOracle `0x8EeFCdbD984c30E472BcbF545783D051CB5114e5` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser Curated Module Committee `0x2570e0b22AD904501dfB0d49575991ACB801dD91`
-1.67. Register Curated Verifier `0xC392F457960f1B13Ebaf1aa6C065479dD507E1E3` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser Curated Module Committee `0x2570e0b22AD904501dfB0d49575991ACB801dD91`
-1.68. Register Curated Ejector `0xe181A377A2d2BDE9A83f1474BC3DB7A412de091E` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser Curated Module Committee `0x2570e0b22AD904501dfB0d49575991ACB801dD91`
-1.69. [UNKNOWN] Execute `finishUpgrade()` on Upgrade Template `0xd92b6303ba39297cb69a3a17a88b47586a6af14c`
+1.64. Register CuratedModule `0xDa5F930cE326EB5205085D66c72A4E79d60cB8C1` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser CMC Committee `0x2570e0b22AD904501dfB0d49575991ACB801dD91`
+1.65. Register Curated Accounting `0x2F91e3A8C5d6593bf4F8403fCfeCcd62dF59f6F6` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser CMC Committee `0x2570e0b22AD904501dfB0d49575991ACB801dD91`
+1.66. Register Curated FeeOracle `0x8EeFCdbD984c30E472BcbF545783D051CB5114e5` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser CMC Committee `0x2570e0b22AD904501dfB0d49575991ACB801dD91`
+1.67. Register Curated Verifier `0xC392F457960f1B13Ebaf1aa6C065479dD507E1E3` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser CMC Committee `0x2570e0b22AD904501dfB0d49575991ACB801dD91`
+1.68. Register Curated Ejector `0xe181A377A2d2BDE9A83f1474BC3DB7A412de091E` on CircuitBreaker `0x6019cb557978296ba3c08a7b73225c0975dfb2f7` with pauser CMC Committee `0x2570e0b22AD904501dfB0d49575991ACB801dD91`
+1.69. Execute `finishUpgrade()` on Upgrade Template `0xd92b6303ba39297cb69a3a17a88b47586a6af14c`
 
 IX. Update Community Staking Module Easy Track factories
 2. Remove EVM script factory CSMSettleElStealingPenalty `0xF6B6E7997338C48Ea3a8BCfa4BB64a315fDa76f4` from EasyTrack `0xf0211b7660680b49de1a7e9f25c65660f0a13fea`
