@@ -95,7 +95,7 @@ Ensure the upgraded contract name appears only before the proxy address. Do not 
 
 Verify every parsed contract address against the Lido Docs protocol contracts registry when possible.
 
-Use the registry's canonical contract name only when the address matches. Preserve checksum address casing from the parsed input when available; otherwise use the registry checksum casing if available.
+Use the registry's canonical contract name only when the address matches. For the matching address entry, require `old` immediately before the contract name when it is marked `[proposed to remove]`, and require `new` immediately before the contract name when it is marked `[proposed]`. Treat these markers as address-specific: an unmarked entry gets neither prefix even when another entry has the same canonical name. Preserve checksum address casing from the parsed input when available; otherwise use the registry checksum casing if available.
 
 If an address is absent from the registry, mark it as `[UNKNOWN]` and keep the raw address. A parsed label or proposal-context label may be included only after `[UNKNOWN]`. Calls whose calldata is parsed as `[empty]` are an exception: never add `[UNKNOWN]` to those calls, even when the target is absent from the registry.
 
@@ -131,7 +131,7 @@ If an action is missing, add it under the correct section or create a new concis
 
 If an action is extra or represents a pure wrapper, remove it.
 
-If a contract name does not match the registry address, replace the name with the canonical registry name when matched, or mark the address `[UNKNOWN]` when unmatched. For a call whose calldata is parsed as `[empty]`, remove the unverified canonical name if necessary but do not add `[UNKNOWN]`; retain the raw address and any supplied parsed label.
+If a contract name does not match the registry address, replace the name with the canonical registry name when matched, or mark the address `[UNKNOWN]` when unmatched. For a matched registry entry marked `[proposed to remove]`, repair the label to `old <canonical contract name>`; for one marked `[proposed]`, repair it to `new <canonical contract name>`; remove either prefix from unmarked entries. For a call whose calldata is parsed as `[empty]`, remove the unverified canonical name if necessary but do not add `[UNKNOWN]`; retain the raw address and any supplied parsed label.
 
 If a call whose calldata is parsed as `[empty]` is marked `[UNKNOWN]`, remove that marker while preserving the action, target address, exact call value, and any supported label or semantics.
 

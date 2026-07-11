@@ -17,7 +17,7 @@ Use the voting calldata, parsed execution trace, proposal metadata, and any link
 
 `https://raw.githubusercontent.com/lidofinance/docs/refs/heads/feat/srv3-proposed-contracts/docs/deployed-contracts/index.md`
 
-Use the registry to verify parsed contract addresses and obtain canonical contract names. Do not use a registry name unless the address matches. If an address is absent from the registry, mark it as `[UNKNOWN]` and keep the raw address; include any label supplied by parsed calldata or proposal context only after `[UNKNOWN]`. Calls whose calldata is parsed as `[empty]` are an exception: never add `[UNKNOWN]` to those calls, even when the target is absent from the registry.
+Use the registry to verify parsed contract addresses and obtain canonical contract names. Do not use a registry name unless the address matches. For the matching address entry, render a contract marked `[proposed to remove]` as `old <canonical contract name>` and a contract marked `[proposed]` as `new <canonical contract name>`. Treat these markers as address-specific; do not prefix an unmarked entry merely because another entry has the same canonical name. If an address is absent from the registry, mark it as `[UNKNOWN]` and keep the raw address; include any label supplied by parsed calldata or proposal context only after `[UNKNOWN]`. Calls whose calldata is parsed as `[empty]` are an exception: never add `[UNKNOWN]` to those calls, even when the target is absent from the registry.
 
 ## Workflow
 
@@ -145,6 +145,8 @@ Check that each `grantRole` and `revokeRole` action names the called contract as
 Check that `registerPauser` uses the called contract as the registry or authority and the first argument as the pausable contract.
 
 Check contract names and addresses against the Lido Docs protocol contracts registry.
+
+Check that every registry entry marked `[proposed to remove]` uses `old` immediately before its contract name, every entry marked `[proposed]` uses `new` immediately before its contract name, and unmarked entries use neither prefix.
 
 Check that every address absent from the registry is marked with `[UNKNOWN]`, except calls whose calldata is parsed as `[empty]`, which must never be marked `[UNKNOWN]`.
 
