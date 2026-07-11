@@ -9,7 +9,7 @@ description: Convert provided Lido DAO voting calldata or parsed vote execution 
 
 Read the voting calldata supplied by the user and write only the effective governance actions to `voting_items.md`.
 
-Expand nested execution wrappers, especially `AragonAgent.forward(bytes _evmScript)` entries with `See parsed evm script at ...`. Ignore wrapper calls in the final action list unless the wrapper itself is the meaningful action. Do not ignore calls with empty calldata; mark them as `[UNKNOWN]` actions on the called target.
+Expand nested execution wrappers, especially `AragonAgent.forward(bytes _evmScript)` entries with `See parsed evm script at ...`. Ignore wrapper calls in the final action list unless the wrapper itself is the meaningful action. Do not ignore calls whose calldata is parsed as `[empty]`, and do not mark those calls as `[UNKNOWN]`.
 
 ## Required Inputs
 
@@ -17,7 +17,7 @@ Use the voting calldata, parsed execution trace, proposal metadata, and any link
 
 `https://raw.githubusercontent.com/lidofinance/docs/refs/heads/feat/srv3-proposed-contracts/docs/deployed-contracts/index.md`
 
-Use the registry to verify parsed contract addresses and obtain canonical contract names. Do not use a registry name unless the address matches. If an address is absent from the registry, mark it as `[UNKNOWN]` and keep the raw address; include any label supplied by parsed calldata or proposal context only after `[UNKNOWN]`.
+Use the registry to verify parsed contract addresses and obtain canonical contract names. Do not use a registry name unless the address matches. If an address is absent from the registry, mark it as `[UNKNOWN]` and keep the raw address; include any label supplied by parsed calldata or proposal context only after `[UNKNOWN]`. Calls whose calldata is parsed as `[empty]` are an exception: never add `[UNKNOWN]` to those calls, even when the target is absent from the registry.
 
 ## Workflow
 
@@ -108,9 +108,17 @@ For `deactivateNodeOperator(uint256 _nodeOperatorId)`, write:
 Deactivate Node Operator <known name if available> (id = <id>) in <module label> <address>
 ```
 
+For proxy upgrade functions such as `upgradeTo(address)`, `upgradeToAndCall(address,bytes)`, and equivalent proxy-admin or upgrade-template calls, write:
+
+```text
+Upgrade <contract name> <proxy address> to implementation <new implementation address>
+```
+
+Do not repeat the contract name after `implementation` or immediately before the new implementation address. Name the upgraded contract once, before the proxy address. Append setup calldata, force-call flags, or other material arguments after the new implementation address when present.
+
 ## Normalization Rules
 
-Mark any call with empty calldata as `[UNKNOWN]`, keep its called target address, and include the target contract name only if verified in the registry.
+Retain every call whose calldata is parsed as `[empty]`, but never mark the call as `[UNKNOWN]`. Use known semantics from the trace or proposal context when available. Otherwise describe the observable operation neutrally, such as an empty-calldata call to the target, or an ETH transfer when the call value is nonzero. Always keep the called target address and exact call value. Include a canonical contract name only when verified in the registry; otherwise keep the raw address and any supplied parsed label without inventing a label. This rule overrides the general `[UNKNOWN]` rule for addresses absent from the registry.
 
 Do not invent missing labels. If a label is unavailable, use the raw address or hash and optionally note the uncertainty.
 
@@ -130,7 +138,7 @@ Before finishing, check that `voting_items.md` contains the final action list an
 
 Count effective inner calls and ensure the final numbered list covers every non-wrapper action exactly once.
 
-Check that every empty-calldata call is represented exactly once and marked as `[UNKNOWN]`.
+Check that every call parsed with calldata `[empty]` is represented exactly once and is not marked as `[UNKNOWN]`.
 
 Check that each `grantRole` and `revokeRole` action names the called contract as the permission target, not the forwarding agent.
 
@@ -138,7 +146,7 @@ Check that `registerPauser` uses the called contract as the registry or authorit
 
 Check contract names and addresses against the Lido Docs protocol contracts registry.
 
-Check that every address absent from the registry is marked with `[UNKNOWN]`.
+Check that every address absent from the registry is marked with `[UNKNOWN]`, except calls whose calldata is parsed as `[empty]`, which must never be marked `[UNKNOWN]`.
 
 Check that the Dual Governance submission appears before section `I.` and is not included under any section heading.
 
@@ -147,3 +155,5 @@ Check that every generated section heading and action line starts at column 1 wi
 Check that section headings match the actions below them and that integer top-level numbering is continuous, with decimal numbering used only for subactions of the corresponding top-level item.
 
 Check that every address, hash, and material value is wrapped in backticks.
+
+Check that every proxy upgrade names the upgraded contract only before the proxy address and does not repeat that contract name before the new implementation address.
