@@ -1,4 +1,4 @@
-1. Submit Dual Governance proposal with metadata `aa` and `1` call to Dual Governance `0xc1db28b3301331277e307fdcff8de28242a4486e`
+1. Submit Dual Governance proposal with `1` call to Dual Governance `0xc1db28b3301331277e307fdcff8de28242a4486e`
 
 I. Start Upgrade
 1.1. Execute `startUpgrade()` on Upgrade Template `0xd92b6303ba39297cb69a3a17a88b47586a6af14c`
