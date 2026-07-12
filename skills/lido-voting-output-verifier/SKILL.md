@@ -1,6 +1,6 @@
 ---
 name: lido-voting-output-verifier
-description: Perform a full independent verification and repair pass on voting_items.md generated from Lido DAO voting calldata, including strict byte-for-byte checks of every address, hash, and calldata-derived value. Use when checking or fixing a human-readable Lido governance action list against source calldata, parsed Aragon execution traces, nested EVM scripts, registry names, numbering, formatting, calls with calldata parsed as empty, or role and pauser semantics.
+description: Perform a full independent verification and repair pass on voting_items.md generated from Lido DAO voting calldata, including strict byte-for-byte checks of every address, hash, and calldata-derived value and Keccak-256 verification and repair of role names. Use when checking or fixing a human-readable Lido governance action list against source calldata, parsed Aragon execution traces, nested EVM scripts, registry names, numbering, formatting, calls with calldata parsed as empty, or role and pauser semantics.
 ---
 
 # Lido Voting Output Verifier
@@ -20,9 +20,10 @@ Use this registry for canonical contract-name checks:
 3. Count effective non-wrapper calls, including empty-calldata calls.
 4. Read `voting_items.md` and map each action line to exactly one effective call.
 5. Run the strict byte-for-byte checks below for every mapped action. Use a mechanical comparison for every raw hex value; visual inspection is not verification. Treat one mismatched, omitted, truncated, rounded, or unverified byte sequence as a verification failure.
-6. Fetch or read the Lido Docs registry and verify every contract name/address pair used in `voting_items.md`.
-7. Fix missing, extra, duplicated, mislabeled, misordered, misformatted, or byte-inaccurate actions directly in `voting_items.md`.
-8. Re-run the checklist below after edits until no issues remain.
+6. Run `Mandatory Role Name Keccak-256 Verification` for every role hash, including hashes whose names are missing from or already present in `voting_items.md`.
+7. Fetch or read the Lido Docs registry and verify every contract name/address pair used in `voting_items.md`.
+8. Fix missing, extra, duplicated, mislabeled, misordered, misformatted, or byte-inaccurate actions directly in `voting_items.md`.
+9. Re-run the checklist below after edits until no issues remain.
 
 ## Strict Byte-For-Byte Checks
 
@@ -55,6 +56,27 @@ For strings, compare the exact encoded byte content and length; do not silently 
 
 Trace each backticked address, hash, and value in every action line to one exact source byte range or to an exact lossless derivation from that range. A single unexplained value or mismatch fails the entire verification pass. Repair the action and repeat the byte comparison. If the available source artifacts do not expose the bytes needed for an exact check, do not claim that verification passed; keep the exact raw value available in the source artifact and report the verification blocker to the user.
 
+### Mandatory Role Name Keccak-256 Verification
+
+For every symbolic role name associated with a `bytes32` role identifier, verify mechanically that:
+
+```text
+keccak256(UTF-8 bytes of the exact role name) == role_hash
+```
+
+Use Ethereum Keccak-256, not NIST SHA3-256. Hash the exact case-sensitive role name with its underscores and other characters, without quotes, whitespace changes, a line ending, or a null terminator. Compare the complete computed 32-byte digest with the complete role hash decoded from calldata. A parsed label, proposal description, neighboring action, documentation entry, existing output label, or conventional alias is only a candidate source and never proof of equality.
+
+Inventory all distinct role hashes in the effective call list, including hashes that have no name in `voting_items.md`. Search all supplied artifacts and relevant verified contract source or documentation for candidate names, compute each candidate digest, and record the exact match before approving the action. Do not stop merely because the current output omitted a name.
+
+Repair `voting_items.md` in place as follows:
+
+- Add the matching role name when an unlabeled hash has an exact candidate digest match.
+- Replace an incorrect role name with the candidate whose complete digest matches.
+- Remove the role name and retain the exact role hash when no candidate matches; never preserve or invent an unverified name.
+- Apply the same requirement to conventional aliases and names derived from formatting normalization. A symbolic name does not pass this check unless its exact Keccak-256 digest equals the calldata hash.
+
+After each repair, re-extract the displayed name and hash, recompute the digest from the displayed name, and repeat the full 32-byte comparison. One missing resolvable name, mismatched name, or name approved without this computation fails verification.
+
 ## Coverage Checks
 
 Every effective non-wrapper call from the calldata must appear exactly once.
@@ -71,7 +93,7 @@ Top-level integer numbering must be continuous after the Dual Governance submiss
 
 ## Semantic Checks
 
-For every `grantRole(bytes32 role, address account)` or `revokeRole(bytes32 role, address account)` action, ensure the target contract in the action is the called contract receiving the permission change, not the forwarding agent. Ensure role names and role hashes are preserved. Normalize `[PAUSE ROLE]` to `PAUSE_ROLE`.
+For every `grantRole(bytes32 role, address account)` or `revokeRole(bytes32 role, address account)` action, ensure the target contract in the action is the called contract receiving the permission change, not the forwarding agent. Preserve the exact role hash and require every displayed role name to pass `Mandatory Role Name Keccak-256 Verification`. Treat `[PAUSE ROLE]` only as a candidate for `PAUSE_ROLE`; use `PAUSE_ROLE` only if its exact digest matches.
 
 For `registerPauser(address _pausable, address _newPauser)`, ensure the action uses the called contract as the registry or authority and the first argument as the pausable contract.
 
@@ -81,7 +103,7 @@ For `setNodeOperatorName(uint256 _nodeOperatorId, string _name)`, ensure the nod
 
 For `deactivateNodeOperator(uint256 _nodeOperatorId)`, ensure the node operator ID is present and include the known name when discoverable from the provided calldata or context.
 
-If a role hash is unlabeled but can be confidently identified from nearby calls or known contract docs, include the role name. Otherwise keep the raw hash without inventing a name.
+For every unlabeled role hash, search supplied artifacts and relevant verified contract source or documentation for candidates and add the name when its exact Keccak-256 digest matches. Otherwise keep the raw hash without inventing a name.
 
 For proxy upgrade functions such as `upgradeTo(address)`, `upgradeToAndCall(address,bytes)`, and equivalent proxy-admin or upgrade-template calls, require this wording:
 
@@ -136,6 +158,8 @@ If a contract name does not match the registry address, replace the name with th
 If a call whose calldata is parsed as `[empty]` is marked `[UNKNOWN]`, remove that marker while preserving the action, target address, exact call value, and any supported label or semantics.
 
 If a proxy upgrade repeats the upgraded contract name before the new implementation address, remove only that repeated name while preserving both addresses and every other material argument.
+
+If a role name is missing and a candidate's exact Keccak-256 digest matches the calldata hash, add that name. If a displayed role name's digest does not match, replace it with an exact matching candidate or remove the name when none can be established. Never change the source role hash to make it agree with a name.
 
 If numbering is invalid, renumber the smallest necessary range while preserving the relationship between top-level items and decimal subactions.
 

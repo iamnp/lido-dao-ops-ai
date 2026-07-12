@@ -1,6 +1,6 @@
 ---
 name: lido-voting-action-list
-description: Convert provided Lido DAO voting calldata or parsed vote execution traces into a concise human-readable governance action list in voting_items.md. Use when the user supplies Lido voting calldata, Aragon vote call data, parsed EVM scripts, or proposal execution items and asks for voting items, action lists, or human-readable Lido governance actions.
+description: Convert provided Lido DAO voting calldata or parsed vote execution traces into a concise human-readable governance action list in voting_items.md, including Keccak-256 verification and repair of role names. Use when the user supplies Lido voting calldata, Aragon vote call data, parsed EVM scripts, or proposal execution items and asks for voting items, action lists, or human-readable Lido governance actions.
 ---
 
 # Lido Voting Action List
@@ -24,10 +24,11 @@ Use the registry to verify parsed contract addresses and obtain canonical contra
 1. Parse all top-level voting items and all nested scripts referenced by wrappers.
 2. Build the effective call list by removing pure wrappers and retaining every non-wrapper action exactly once.
 3. Preserve all material values from calldata: contract names, addresses, role hashes, IDs, limits, durations, names, and accounts.
-4. Verify every target address against the Lido Docs registry when possible.
-5. Convert action semantics into concise one-sentence action lines.
-6. Create or overwrite `voting_items.md` with only the final action list.
-7. Run the checks in `Verification` before finishing.
+4. Mechanically verify every role name against its calldata role hash as specified in `Role Name Hash Verification` below. Add names for resolved hashes and correct or remove names that do not match.
+5. Verify every target address against the Lido Docs registry when possible.
+6. Convert action semantics into concise one-sentence action lines.
+7. Create or overwrite `voting_items.md` with only the final action list.
+8. Run the checks in `Verification` before finishing.
 
 ## Output Format
 
@@ -84,6 +85,20 @@ For `grantRole(bytes32 role, address account)`, write:
 Grant <ROLE_NAME> <role_hash> to <account label/address> on <target contract label> <target address>
 ```
 
+## Role Name Hash Verification
+
+For every symbolic role name associated with a `bytes32` role identifier, verify mechanically that:
+
+```text
+keccak256(UTF-8 bytes of the exact role name) == role_hash
+```
+
+Use Ethereum Keccak-256, not NIST SHA3-256. Hash the exact case-sensitive role name with its underscores and other characters, without quotes, whitespace changes, a line ending, or a null terminator. Compare the complete computed 32-byte digest with the complete role hash from calldata; visual or prefix matching is insufficient.
+
+Do not trust a parsed label, proposal description, neighboring action, documentation, or conventional alias as proof of the mapping. Use those sources and verified contract source only to collect candidate names, then hash every candidate. For each role hash, actively look for a name in all supplied artifacts and relevant verified contract source or documentation rather than leaving a readily resolvable hash unlabeled.
+
+Add a missing role name only after an exact digest match. If an existing or supplied name does not match, replace it with a candidate that does. If no candidate matches, omit the role name and retain the exact hash; never invent or preserve an unverified name. Apply the same requirement to conventional aliases and names derived from formatting normalization: a symbolic name does not pass this rule unless its exact Keccak-256 digest equals the calldata hash.
+
 For `registerPauser(address _pausable, address _newPauser)`, write:
 
 ```text
@@ -122,9 +137,9 @@ Retain every call whose calldata is parsed as `[empty]`, but never mark the call
 
 Do not invent missing labels. If a label is unavailable, use the raw address or hash and optionally note the uncertainty.
 
-Normalize `[PAUSE ROLE]` to `PAUSE_ROLE`.
+Treat `[PAUSE ROLE]` as a candidate for `PAUSE_ROLE`, but include `PAUSE_ROLE` only when its exact Keccak-256 digest matches the calldata role hash.
 
-If a role hash is unlabeled but can be confidently identified from nearby calls or known contract docs, include the role name; otherwise output the hash without a role name.
+If a role hash is unlabeled, search supplied artifacts and relevant verified contract source or documentation for candidate names and apply `Role Name Hash Verification`. Include only an exact match; otherwise output the hash without a role name.
 
 Prefer domain names used in Lido docs or parsed labels, but keep the exact target address so the action remains verifiable.
 
@@ -141,6 +156,8 @@ Count effective inner calls and ensure the final numbered list covers every non-
 Check that every call parsed with calldata `[empty]` is represented exactly once and is not marked as `[UNKNOWN]`.
 
 Check that each `grantRole` and `revokeRole` action names the called contract as the permission target, not the forwarding agent.
+
+Check every displayed role name by mechanically computing Ethereum Keccak-256 over its exact UTF-8 bytes and comparing the complete digest with the exact calldata role hash. Add every missing name that can be resolved by an exact match, replace every incorrect name with the matching name, and remove any name for which no exact match can be established.
 
 Check that `registerPauser` uses the called contract as the registry or authority and the first argument as the pausable contract.
 
