@@ -9,10 +9,6 @@ description: Perform a full independent verification and repair pass on voting_i
 
 Audit `voting_items.md` against the original Lido voting calldata and fix the file in place. Treat the generated action list as untrusted until every effective governance action has been reconciled with source calldata, nested scripts, and the Lido Docs registry, and every address, hash, and calldata-derived value has passed the strict byte-for-byte checks below.
 
-Use this registry for canonical contract-name checks:
-
-`https://raw.githubusercontent.com/lidofinance/docs/refs/heads/feat/srv3-proposed-contracts/docs/deployed-contracts/index.md`
-
 ## Verification Workflow
 
 1. Read the source voting calldata, parsed proposal text, and any linked parsed EVM scripts.
